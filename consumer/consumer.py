@@ -104,6 +104,7 @@ for message in consumer:
             batch.clear()
 
     except Exception as e:
-        send_to_dlq(message.value, str(e))
+        DB_CONN.rollback()
+        send_to_dlq(event, str(e))
         consumer.commit()
         print("Sent event to DLQ:", e)
